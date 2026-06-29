@@ -1,0 +1,3 @@
+Placeholder for hero.jpg.
+
+This text file represents a homepage hero image for lab purposes.
