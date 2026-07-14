@@ -1,519 +1,717 @@
-## Step 1
-**Task:** Run the following command to connect to your EC2 instance.
-**Command(s):**
+Library
+/
+solutions-reviewed.md
+
+
+# Solutions
+
+## Configure SSH password and key-based access
+
+### Step 1 — Connect to the EC2 instance using the generated password
+
 ```bash
 ssh ec2-user@<public-IP>
 ```
 
-## Step 2
-**Task:** Type `y` and press `Enter` if prompted to confirm the authenticity of the host.
+Replace `<public-IP>` with the public IP address shown in the Lab Credentials panel.
 
-## Step 3
-**Task:** Copy and paste the instance **Password** from the **Lab Credentials** panel, then press `Enter`.
+### Step 2 — Confirm the host key
 
-## Step 4
-**Task:** Run the following command to generate an SSH key pair.
-**Command(s):**
+When prompted, type:
+
+```text
+yes
+```
+
+### Step 3 — Authenticate with the generated password
+
+Paste the instance password from the Lab Credentials panel and press `Enter`.
+
+### Step 4 — Generate an Ed25519 SSH key pair on the EC2 instance
+
 ```bash
 ssh-keygen -t ed25519 -C "lab-key"
 ```
 
-## Step 5
-**Task:** Press `Enter` to accept the default file location. When prompted for a passphrase, press `Enter` to leave it empty, then press `Enter` again to confirm.
+### Step 5 — Accept the key-generation prompts
 
-## Step 9
-**Task:** Run the following command to add the public key to the list of authorized keys.
-**Command(s):**
+Press `Enter` to accept the default path:
+
+```text
+/home/ec2-user/.ssh/id_ed25519
+```
+
+Press `Enter` twice to leave the passphrase empty.
+
+### Step 6 — Add the generated public key to `authorized_keys`
+
 ```bash
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 ```
 
-## Step 10
-**Task:** Run the following commands to set the required permissions.
-**Command(s):**
+### Step 7 — Set the required SSH directory and file permissions
+
 ```bash
 chmod 700 ~/.ssh
-```
-```bash
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-## Step 11
-**Task:** Run the following command to display your private key.
-**Command(s):**
+### Step 8 — Display and copy the private key
+
 ```bash
 cat ~/.ssh/id_ed25519
 ```
 
-## Step 13
-**Task:** Type `exit` and press `Enter` to disconnect from the EC2 instance.
+Copy the entire block, including both header and footer:
 
-## Step 14
-**Task:** Run the following command to create the `.ssh` directory if it does not already exist.
-**Command(s):**
+```text
+-----BEGIN OPENSSH PRIVATE KEY-----
+...
+-----END OPENSSH PRIVATE KEY-----
+```
+
+### Step 9 — Disconnect from the EC2 instance
+
+```bash
+exit
+```
+
+### Step 10 — Create the SSH directory in the learner terminal
+
 ```bash
 mkdir -p ~/.ssh
 ```
 
-## Step 14
-**Task:** From the terminal, run the command:
-**Command(s):**
+### Step 11 — Open the lab key editor
+
 ```bash
 add_key
 ```
 
-## Step 15
-**Task:** Press `i` to enter insert mode.
+The lab utility writes the key to:
 
-## Step 16
-**Task:** Paste in the private key you retrieve in earlier steps at the top of this editor.
+```text
+/home/cloud_user/.ssh/id_dropbear
+```
 
-## Step 17
-**Task:** Press `Esc`.
+### Step 12 — Paste and save the private key
 
-## Step 18
-**Task:** Use the command `:wq` and press `Enter` to save the key and exit.
+In the editor:
 
-## Step 19
-**Task:** Run the command:
-**Command(s):**
+1. Press `i`.
+2. Paste the entire private-key block.
+3. Press `Esc`.
+4. Type `:wq`.
+5. Press `Enter`.
+
+### Step 13 — Set restrictive permissions on the private key
+
+```bash
+chmod 600 /home/cloud_user/.ssh/id_dropbear
+```
+
+### Step 14 — Connect to EC2 using the private key
+
 ```bash
 ssh -i /home/cloud_user/.ssh/id_dropbear ec2-user@<public-IP>
 ```
 
-## Step 20
-**Task:** Type `y` and press `Enter` if prompted to confirm the authenticity of the host.
+Replace `<public-IP>` with the public IP address from the Lab Credentials panel.
 
-## Step 21
-**Task:** Run the following command to update the installed packages on the EC2 instance.
-**Command(s):**
+### Step 15 — Confirm the host key if prompted
+
+```text
+yes
+```
+
+### Step 16 — Update installed packages
+
 ```bash
 sudo dnf update -y
 ```
 
-## Step 22
-**Task:** Run the following command to install git on the system.
-**Command(s):**
+### Step 17 — Install Git
+
 ```bash
 sudo dnf install git -y
 ```
 
-## Step 23
-**Task:** Run the following command to change to the `/srv` directory.
-**Command(s):**
+---
+
+# Perform filesystem navigation and file management tasks
+
+### Step 1 — Change to `/srv`
+
 ```bash
 cd /srv
 ```
 
-## Step 24
-**Task:** Run the following command to clone the sample web application repository into the `/srv` directory.
-**Command(s):**
+### Step 2 — Clone the sample application repository
+
 ```bash
 sudo git clone https://github.com/ps-interactive/lab_navigating-and-managing-amazon-linux.git
 ```
 
-## Step 25
-**Task:** Run the following command to display your current working directory.
-**Command(s):**
+### Step 3 — Display the current working directory
+
 ```bash
 pwd
 ```
 
-## Step 26
-**Task:** Run the following command to list the contents of the current directory.
-**Command(s):**
+Expected location:
+
+```text
+/srv
+```
+
+### Step 4 — List the directory contents
+
 ```bash
 ls
 ```
 
-## Step 27
-**Task:** Run the following command to change to the cloned repository.
-**Command(s):**
-```bash
-cd lab_navigating-and-managing-amazon-linux/
+Verify that this directory appears:
+
+```text
+lab_navigating-and-managing-amazon-linux
 ```
 
-## Step 28
-**Task:** Run the following command to change to the `Frontend` directory.
-**Command(s):**
+### Step 5 — Change to the project directory
+
 ```bash
-cd Frontend/
+cd /srv/lab_navigating-and-managing-amazon-linux
 ```
 
-## Step 29
-**Task:** Suppose you need to locate the application's `health.html` file but don't know which subdirectory contains it. First, run the following command to list the contents of the current directory.
-**Command(s):**
+### Step 6 — Change to the `Frontend` directory using a relative path
+
+```bash
+cd Frontend
+```
+
+### Step 7 — List the current directory
+
 ```bash
 ls
 ```
 
-## Step 30
-**Task:** To locate the file, run the following command.
-**Command(s):**
+Confirm that `health.html` is not in the current directory.
+
+### Step 8 — Locate `health.html`
+
 ```bash
 find . -name "health.html"
 ```
 
-## Step 31
-**Task:** Change to the `public` directory.
-**Command(s):**
-```bash
-cd public/
+Expected result:
+
+```text
+./public/health.html
 ```
 
-## Step 32
-**Task:** Then, run the following command to list the contents of the current directory.
-**Command(s):**
+### Step 9 — Change to the `public` directory
+
+```bash
+cd public
+```
+
+### Step 10 — Verify that `health.html` is present
+
 ```bash
 ls
 ```
 
-## Step 33
-**Task:** Move back to your previous directory by running:
-**Command(s):**
+### Step 11 — Return to the `Frontend` directory
+
 ```bash
 cd ..
 ```
 
-## Step 34
-**Task:** Display your current working directory.
-**Command(s):**
+### Step 12 — Display the current working directory
+
 ```bash
 pwd
 ```
 
-## Step 35
-**Task:** Run the following command to search for the `DB_NAME` configuration setting.
-**Command(s):**
-```bash
-grep -R "DB_NAME"
+Expected path:
+
+```text
+/srv/lab_navigating-and-managing-amazon-linux/Frontend
 ```
 
-## Step 36
-**Task:** Run the following command to change to the `config` directory.
-**Command(s):**
+### Step 13 — Search recursively for `DB_NAME`
+
 ```bash
-cd config/
+grep -R "DB_NAME" .
 ```
 
-## Step 37
-**Task:** Run the following command to view the contents of the configuration file.
-**Command(s):**
+The expected matching file is:
+
+```text
+config/database.conf
+```
+
+### Step 14 — Change to the `config` directory
+
+```bash
+cd config
+```
+
+### Step 15 — Display the database configuration
+
 ```bash
 cat database.conf
 ```
 
-## Step 38
-**Task:** Run the command:
-**Command(s):**
+### Step 16 — Return to the `ec2-user` home directory using an absolute path
+
 ```bash
-cd /home/ec2-user/
+cd /home/ec2-user
 ```
 
-## Step 39
-**Task:** Then, check your current working directory.
-**Command(s):**
+### Step 17 — Verify the current working directory
+
 ```bash
 pwd
 ```
 
-## Step 1
-**Task:** First, return to the project directory by running the following command.
-**Command(s):**
-```bash
-cd /srv/lab_navigating-and-managing-amazon-linux/
+Expected path:
+
+```text
+/home/ec2-user
 ```
 
-## Step 41
-**Task:** Run the following command to create the `Backend` directory.
-**Command(s):**
+### Step 18 — Return to the project directory
+
+```bash
+cd /srv/lab_navigating-and-managing-amazon-linux
+```
+
+### Step 19 — Create the `Backend` directory
+
 ```bash
 sudo mkdir Backend
 ```
 
-## Step 42
-**Task:** Change to the new directory.
-**Command(s):**
+### Step 20 — Change to the new directory
+
 ```bash
-cd Backend/
+cd Backend
 ```
 
-## Step 43
-**Task:** Run the following command to create a new file named `server.js`.
-**Command(s):**
+### Step 21 — Create `server.js`
+
 ```bash
 sudo touch server.js
 ```
 
-## Step 44
-**Task:** List the contents of the current directory and verify that the `server.js` file appears in the output.
-**Command(s):**
+### Step 22 — Verify that `server.js` exists
+
 ```bash
 ls
 ```
 
+---
 
 # Create and configure users, groups, and sudo access for a multi-team application environment
 
-## Step 1
-**Task:** Run the command:
-**Command(s):**
+### Step 1 — Create the frontend group
+
 ```bash
 sudo groupadd frontend_group
 ```
 
-## Step 2
-**Task:** Create a `backend_group` to manage members of the backend development team.
-**Command(s):**
+### Step 2 — Create the backend group
+
 ```bash
 sudo groupadd backend_group
 ```
 
-## Step 3
-**Task:** Create an `admin_group` to manage administrative users.
-**Command(s):**
+### Step 3 — Create the administrator group
+
 ```bash
 sudo groupadd admin_group
 ```
 
-## Step 4
-**Task:** Run the command:
-**Command(s):**
+Optional verification:
+
+```bash
+getent group frontend_group
+getent group backend_group
+getent group admin_group
+```
+
+### Step 4 — Create `frontend1`
+
 ```bash
 sudo useradd -m frontend1
 ```
 
-## Step 5
-**Task:** Create four more users:`frontend2`, `backend1`, `backend2` and `admin1`.
+### Step 5 — Create the remaining users
 
-## Step 6
-**Task:** Run the following command.
-**Command(s):**
+```bash
+sudo useradd -m frontend2
+sudo useradd -m backend1
+sudo useradd -m backend2
+sudo useradd -m admin1
+```
+
+### Step 6 — Add `frontend1` to `frontend_group`
+
 ```bash
 sudo usermod -aG frontend_group frontend1
 ```
 
-## Step 7
-**Task:** Add `frontend2`, `backend1`, `backend2` and `admin1` to their respective groups.
-**Command(s):**
+### Step 7 — Add every remaining user to the appropriate group
+
+```bash
+sudo usermod -aG frontend_group frontend2
+sudo usermod -aG backend_group backend1
+sudo usermod -aG backend_group backend2
+sudo usermod -aG admin_group admin1
+```
+
+Verify the memberships:
+
 ```bash
 groups frontend1
+groups frontend2
+groups backend1
+groups backend2
+groups admin1
 ```
 
-## Step 8
-**Task:** Run the command:
-**Command(s):**
+### Step 8 — Return to the project directory
+
 ```bash
-cd ..
+cd /srv/lab_navigating-and-managing-amazon-linux
 ```
 
-## Step 9
-**Task:** Run the following command.
-**Command(s):**
+### Step 9 — Assign `frontend_group` ownership to `Frontend`
+
 ```bash
 sudo chown -R root:frontend_group Frontend
 ```
 
-## Step 10
-**Task:** Change the group ownership of the `Backend` directory to `backend_group`.
-**Command(s):**
+### Step 10 — Assign `backend_group` ownership to `Backend`
+
 ```bash
-ls -ld Frontend Backend
+sudo chown -R root:backend_group Backend
 ```
+
+Verify ownership:
+
 ```bash
 ls -ld Frontend Backend
 ```
 
-## Step 11
-**Task:** Run the command:
-**Command(s):**
+### Step 11 — Give the owner and group full access to `Frontend`
+
 ```bash
 sudo chmod -R 770 Frontend
 ```
 
-## Step 12
-**Task:** Run the command:
-**Command(s):**
+### Step 12 — Temporarily make `Backend` world-writable for the later audit exercise
+
 ```bash
 sudo chmod -R 777 Backend
 ```
 
-## Step 13
-**Task:** Now add your `admin1` user to both the frontend_group and backend_group. You can see what groups you’re in using `groups admin1`. Now you're going to give the admin user sudo permissions.
+This setting is intentionally insecure and will be corrected later.
 
-## Step 14
-**Task:** Run the command:
-**Command(s):**
+### Step 13 — Add `admin1` to both development groups
+
 ```bash
-sudo visudo
+sudo usermod -aG frontend_group,backend_group admin1
 ```
 
-## Step 15
-**Task:** Add this to the file: `%admin_group ALL=(ALL) ALL`. This makes it so everyone in the admin_group has permissions to use sudo.
+Verify all of `admin1`'s groups:
 
-## Step 16
-**Task:** Save the file with `Control+X`, `SHIFT+Y` and pressing enter. Now that your users and groups have the correct permissions you're going to give each user account a password so you can login to them and test their permissions.
+```bash
+groups admin1
+```
 
-## Step 17
-**Task:** Run the following commands and give each user a password of Learner123.
-**Command(s):**
+Expected memberships include:
+
+```text
+admin_group frontend_group backend_group
+```
+
+### Step 14 — Grant sudo access to `admin_group`
+
+Use a validated sudoers drop-in rather than editing the main sudoers file directly:
+
+```bash
+echo '%admin_group ALL=(ALL) ALL' | sudo tee /etc/sudoers.d/admin_group
+sudo chmod 440 /etc/sudoers.d/admin_group
+sudo visudo -cf /etc/sudoers.d/admin_group
+```
+
+The validation command should report that the file parsed successfully.
+
+### Step 15 — Set each learner account password to `Learner123`
+
+Run each command and enter `Learner123` twice when prompted:
+
 ```bash
 sudo passwd frontend1
-    sudo passwd frontend2
-    sudo passwd backend1
-    sudo passwd admin1
+sudo passwd frontend2
+sudo passwd backend1
+sudo passwd backend2
+sudo passwd admin1
 ```
 
-## Step 18
-**Task:** Run the command:
-**Command(s):**
+### Step 16 — Switch to `frontend1`
+
 ```bash
 su - frontend1
 ```
 
-## Step 19
-**Task:** Run the command:
-**Command(s):**
+Enter:
+
+```text
+Learner123
+```
+
+### Step 17 — Create a file in the frontend directory as `frontend1`
+
 ```bash
 touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/test.txt
 ```
 
-## Step 20
-**Task:** Now switch to the backend1 user.
+### Step 18 — Return to `ec2-user`
 
-## Step 21
-**Task:** Run the command:
-**Command(s):**
 ```bash
-touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/test.txt
+exit
 ```
 
-## Step 22
-**Task:** Now switch to the admin1 user.
+### Step 19 — Switch to `backend1`
 
-## Step 23
-**Task:** Run the command:
-**Command(s):**
+```bash
+su - backend1
+```
+
+Enter:
+
+```text
+Learner123
+```
+
+### Step 20 — Attempt to create a file in `Frontend` as `backend1`
+
+Use a different filename so the result is not affected by the existing `test.txt` file:
+
+```bash
+touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/backend-test.txt
+```
+
+Expected result:
+
+```text
+Permission denied
+```
+
+### Step 21 — Return to `ec2-user`
+
+```bash
+exit
+```
+
+### Step 22 — Switch to `admin1`
+
+```bash
+su - admin1
+```
+
+Enter:
+
+```text
+Learner123
+```
+
+### Step 23 — Verify sudo access
+
 ```bash
 sudo whoami
 ```
 
-## Step 24
-**Task:** Run the command:
-**Command(s):**
+Enter `Learner123` when prompted.
+
+Expected output:
+
+```text
+root
+```
+
+### Step 24 — Create a file in `Frontend` as `admin1`
+
 ```bash
 touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/admin.txt
 ```
 
-## Step 25
-**Task:** Run the command
-**Command(s):**
+### Step 25 — Return to `ec2-user`
+
 ```bash
 exit
 ```
 
+---
 
-# Implement and audit file permissions using special permission bits to meet security requirements
+# Implement and audit file permissions using special permission bits
 
-## Step 1
-**Task:** Run the command:
-**Command(s):**
+Begin from the project directory:
+
+```bash
+cd /srv/lab_navigating-and-managing-amazon-linux
+```
+
+### Step 1 — Enable setgid on `Frontend`
+
 ```bash
 sudo chmod g+s Frontend
 ```
 
-## Step 2
-**Task:** Run the command:
-**Command(s):**
+New files and subdirectories created inside `Frontend` will inherit `frontend_group`.
+
+### Step 2 — Enable the sticky bit on `Frontend`
+
 ```bash
 sudo chmod +t Frontend
 ```
 
-## Step 3
-**Task:** Run the command:
-**Command(s):**
+### Step 3 — Verify the special permission bits
+
 ```bash
 ls -ld Frontend
 ```
 
-## Step 4
-**Task:** Swtich to the frontend1 user.
+The group execute position should contain `s`. The final execute position should contain `T` because others do not have execute permission under mode `770`.
 
-## Step 5
-**Task:** Run the command:
-**Command(s):**
+### Step 4 — Switch to `frontend1`
+
 ```bash
-touch /srv/Frontend/app.js
+su - frontend1
 ```
 
-## Step 6
-**Task:** Run the command:
-**Command(s):**
-```bash
-ls -l /srv/Frontend/app.js
+Enter:
+
+```text
+Learner123
 ```
 
-## Step 7
-**Task:** Create a file called `style.css` in the same directory you just made app.js.
+### Step 5 — Create `app.js` in the correct `Frontend` directory
 
-## Step 8
-**Task:** Run the command
-**Command(s):**
 ```bash
-exit
+touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/app.js
 ```
 
-## Step 9
-**Task:** Switch to the frontend2 user.
+### Step 6 — Verify inherited group ownership
 
-## Step 10
-**Task:** Run the command:
-**Command(s):**
 ```bash
-rm /srv/Frontend/style.css
+ls -l /srv/lab_navigating-and-managing-amazon-linux/Frontend/app.js
 ```
 
-## Step 11
-**Task:** Type `yes` and press enter. You should get an access denied error.
+The group owner should be:
 
-## Step 12
-**Task:** Run the command
-**Command(s):**
+```text
+frontend_group
+```
+
+### Step 7 — Create `style.css`
+
+```bash
+touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/style.css
+```
+
+### Step 8 — Return to `ec2-user`
+
 ```bash
 exit
 ```
 
-## Step 13
-**Task:** Run the command:
-**Command(s):**
+### Step 9 — Switch to `frontend2`
+
+```bash
+su - frontend2
+```
+
+Enter:
+
+```text
+Learner123
+```
+
+### Step 10 — Attempt to remove `frontend1`'s file
+
+```bash
+rm /srv/lab_navigating-and-managing-amazon-linux/Frontend/style.css
+```
+
+If prompted, type:
+
+```text
+yes
+```
+
+Expected result:
+
+```text
+Operation not permitted
+```
+
+The sticky bit prevents `frontend2` from deleting a file owned by `frontend1`.
+
+### Step 11 — Return to `ec2-user`
+
+```bash
+exit
+```
+
+### Step 12 — Return to the project directory
+
+```bash
+cd /srv/lab_navigating-and-managing-amazon-linux
+```
+
+### Step 13 — Find world-writable directories
+
 ```bash
 find . -type d -perm -002
 ```
 
-## Step 14
-**Task:** Run this command to see the exact permissions of the Backend folder:
-**Command(s):**
+Expected result includes:
+
+```text
+./Backend
+```
+
+Permission-denied messages are not expected when running this command from the project directory as `ec2-user`.
+
+### Step 14 — Inspect `Backend` permissions
+
 ```bash
 ls -ld Backend
 ```
 
-## Step 15
-**Task:** Run the command:
-**Command(s):**
+The permissions should show that everyone currently has write access.
+
+### Step 15 — Remove world access from `Backend`
+
 ```bash
-sudo chmod 770 Backend
+sudo chmod -R 770 Backend
 ```
 
-## Step 16
-**Task:** Run the command:
-**Command(s):**
+### Step 16 — Verify the corrected permissions
+
 ```bash
 ls -ld Backend
 ```
 
-## Step 17
-**Task:** Run the command:
-**Command(s):**
+Only the owner and group should have read, write, and execute permissions.
+
+### Step 17 — Repeat the world-writable directory audit
+
 ```bash
 find . -type d -perm -002
 ```
+
+The command should produce no output for `Frontend` or `Backend`.
