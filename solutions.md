@@ -421,7 +421,11 @@ This setting is intentionally insecure and will be corrected later.
 ### Step 13 — Add `admin1` to both development groups
 
 ```bash
-sudo usermod -aG frontend_group,backend_group admin1
+sudo usermod -aG frontend_group admin1
+```
+
+```bash
+sudo usermod -aG backend_group admin1
 ```
 
 Verify all of `admin1`'s groups:
