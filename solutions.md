@@ -505,7 +505,7 @@ Learner123
 Use a different filename so the result is not affected by the existing `test.txt` file:
 
 ```bash
-touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/backend-test.txt
+touch /srv/lab_navigating-and-managing-amazon-linux/Frontend/permission_test.txt
 ```
 
 Expected result:
